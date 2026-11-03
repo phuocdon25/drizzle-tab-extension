@@ -1,0 +1,6 @@
+# Claude Code skills/config (development only, not part of the extension)
+.claude/
+
+# OS / editor
+.DS_Store
+*.swp

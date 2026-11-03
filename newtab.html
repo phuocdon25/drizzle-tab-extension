@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Tab</title>
+  <link rel="icon" href="icons/icon32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Lora:wght@500;600&family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap&subset=vietnamese">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+      <symbol id="i-apps" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></g></symbol>
+      <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r="1" fill="currentColor"/><circle cx="17.5" cy="10.5" r="1" fill="currentColor"/><circle cx="6.5" cy="12.5" r="1" fill="currentColor"/><circle cx="8.5" cy="7.5" r="1" fill="currentColor"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></symbol>
+      <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+      <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+      <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></symbol>
+      <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></symbol>
+      <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><path d="m2 2 20 20"/></symbol>
+    </defs>
+  </svg>
+
+  <div id="backdrop" aria-hidden="true">
+    <canvas id="scene"></canvas>
+    <div id="art-layer" class="art-layer" hidden>
+      <div id="art" class="art"></div>
+      <canvas id="fx"></canvas>
+    </div>
+    <div class="art-dim"></div>
+    <div class="grain"></div>
+  </div>
+
+  <a class="skip-link" href="#search-input" data-i18n="a11y.skip"></a>
+
+  <header class="topbar">
+    <nav class="google-links" data-section="google" aria-label="Google">
+      <a class="pill" href="https://mail.google.com/mail/">Gmail</a>
+      <a class="pill" href="https://www.google.com/imghp" data-i18n="google.images"></a>
+      <div class="popover-wrap">
+        <button id="apps-btn" class="icon-btn" type="button" data-i18n-attr="aria-label:google.apps" aria-haspopup="true" aria-expanded="false" aria-controls="apps-popover">
+          <svg class="icon"><use href="#i-apps"/></svg>
+        </button>
+        <div id="apps-popover" class="popover panel-strong" hidden>
+          <div id="apps-grid" class="apps-grid"></div>
+          <button id="apps-customize" class="btn ghost small" type="button" data-i18n="google.customize"></button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="layout" class="layout">
+    <section class="center" data-i18n-attr="aria-label:main.region">
+      <div class="clock" data-section="clock">
+        <h1 id="clock-time" class="clock-time">--:--</h1>
+        <p id="clock-greeting" class="clock-greeting"></p>
+      </div>
+
+      <form id="search-form" class="search panel" data-section="google" action="https://www.google.com/search" method="get" role="search">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        <input id="search-input" name="q" type="search" data-i18n-attr="placeholder:search.placeholder;aria-label:search.label" autocomplete="off" spellcheck="false">
+        <kbd aria-hidden="true">/</kbd>
+      </form>
+
+      <ul id="links" class="links" data-section="links" data-i18n-attr="aria-label:links.label"></ul>
+    </section>
+
+    <aside id="todo-panel" class="todo panel" data-section="todo" aria-labelledby="todo-title">
+      <div class="panel-head">
+        <h2 id="todo-title"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg> <span data-i18n="todo.title"></span></h2>
+        <span id="todo-summary" class="muted small"></span>
+      </div>
+
+      <form id="todo-form" class="todo-form">
+        <label class="sr-only" for="todo-input" data-i18n="todo.inputLabel"></label>
+        <input id="todo-input" class="field" type="text" data-i18n-attr="placeholder:todo.placeholder" maxlength="200" required autocomplete="off">
+        <div id="todo-composer" class="todo-composer">
+          <div class="row-end">
+            <button class="btn primary small" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> <span data-i18n="todo.add"></span></button>
+          </div>
+        </div>
+      </form>
+
+      <div id="todo-filters" class="tabs" role="tablist" data-i18n-attr="aria-label:todo.filterLabel"></div>
+      <ul id="todo-list" class="todo-list" aria-live="polite"></ul>
+      <div class="todo-foot">
+        <button id="todo-clear-done" class="btn ghost small" type="button" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-eye-off"/></svg> <span data-i18n="todo.clearDone"></span>
+        </button>
+      </div>
+    </aside>
+  </main>
+
+  <section id="history-panel" class="history panel" data-section="history" aria-labelledby="history-title">
+    <button id="history-toggle" class="panel-head history-toggle" type="button" aria-expanded="true" aria-controls="history-body">
+      <h2 id="history-title"><svg class="icon" aria-hidden="true"><use href="#i-history"/></svg> <span data-i18n="history.title"></span></h2>
+      <span id="history-stats" class="history-stats"></span>
+      <svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+    </button>
+    <div id="history-body" class="history-body">
+      <div class="heatmap-scroll">
+        <div id="heatmap-months" class="heatmap-months" aria-hidden="true"></div>
+        <div class="heatmap-wrap">
+          <div class="heatmap-days" aria-hidden="true"></div>
+          <div id="heatmap" class="heatmap" role="group" data-i18n-attr="aria-label:history.gridLabel"></div>
+        </div>
+      </div>
+      <div class="heatmap-legend" aria-hidden="true">
+        <span data-i18n="history.less"></span> <i class="lv0"></i><i class="lv1"></i><i class="lv2"></i><i class="lv3"></i><i class="lv4"></i> <span data-i18n="history.more"></span>
+      </div>
+      <div id="history-day" class="history-day" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <!-- Theme + settings live in the bottom-right corner; the top bar keeps only the Google links. -->
+  <div class="corner-actions">
+    <div class="popover-wrap">
+      <button id="theme-btn" class="icon-btn" type="button" data-i18n-attr="aria-label:theme.change;title:theme.change" aria-haspopup="true" aria-expanded="false" aria-controls="theme-popover">
+        <svg class="icon"><use href="#i-palette"/></svg>
+      </button>
+      <div id="theme-popover" class="popover panel-strong theme-popover" hidden></div>
+    </div>
+    <button id="settings-btn" class="icon-btn" type="button" data-i18n-attr="aria-label:settings.title;title:settings.title">
+      <svg class="icon"><use href="#i-settings"/></svg>
+    </button>
+  </div>
+
+  <dialog id="settings-dialog" class="dialog" aria-labelledby="settings-title">
+    <div class="dialog-head">
+      <h2 id="settings-title" data-i18n="settings.title"></h2>
+      <button class="icon-btn" type="button" data-close data-i18n-attr="aria-label:common.close"><svg class="icon"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="settings">
+      <nav id="settings-nav" class="settings-nav" data-i18n-attr="aria-label:settings.nav"></nav>
+      <div id="settings-body" class="settings-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="link-dialog" class="dialog small-dialog" aria-labelledby="link-dialog-title">
+    <form id="link-form" method="dialog">
+      <div class="dialog-head">
+        <h2 id="link-dialog-title" data-i18n="link.add"></h2>
+        <button class="icon-btn" type="button" data-close data-i18n-attr="aria-label:common.close"><svg class="icon"><use href="#i-x"/></svg></button>
+      </div>
+      <label class="form-label" for="link-title" data-i18n="link.name"></label>
+      <input id="link-title" class="field" type="text" maxlength="40" data-i18n-attr="placeholder:link.namePh">
+      <label class="form-label" for="link-url" data-i18n="link.url"></label>
+      <input id="link-url" class="field" type="text" required placeholder="github.com" aria-describedby="link-error">
+      <p id="link-error" class="field-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button id="link-delete" class="btn danger" type="button" data-i18n="common.delete"></button>
+        <span class="spacer"></span>
+        <button class="btn ghost" type="button" data-close data-i18n="common.cancel"></button>
+        <button class="btn primary" type="submit" data-i18n="common.save"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

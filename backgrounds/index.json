@@ -1,0 +1,75 @@
+{
+  "rainy-city": {
+    "file": "rainy-city.png",
+    "effects": [
+      { "type": "rain", "intensity": 1, "wind": 0.08 },
+      { "type": "glow", "x": 0.19, "y": 0.2, "r": 0.09, "color": "255,90,60", "strength": 0.45 },
+      { "type": "glow", "x": 0.123, "y": 0.31, "r": 0.045, "color": "255,90,60", "strength": 0.4 },
+      { "type": "glow", "x": 0.596, "y": 0.58, "r": 0.03, "color": "255,120,70", "strength": 0.45 },
+      { "type": "glow", "x": 0.788, "y": 0.6, "r": 0.035, "color": "255,120,70", "strength": 0.45 },
+      { "type": "glow", "x": 0.9, "y": 0.186, "r": 0.045, "color": "255,220,160", "strength": 0.35 },
+      { "type": "steam", "x": 0.185, "y": 0.77 }
+    ]
+  },
+  "afternoon-cafe": {
+    "file": "afternoon-cafe.png",
+    "effects": [
+      { "type": "rays", "x": 0.12, "y": -0.05, "angle": 28, "strength": 0.12 },
+      { "type": "dust", "intensity": 1.2, "color": "255,230,170" },
+      { "type": "glow", "x": 0.541, "y": 0.34, "r": 0.045, "color": "255,200,110", "strength": 0.45 },
+      { "type": "steam", "x": 0.517, "y": 0.7 }
+    ]
+  },
+  "snowy-town": {
+    "file": "snowy-town.png",
+    "effects": [
+      { "type": "snow", "intensity": 1, "wind": 8 },
+      { "type": "glow", "x": 0.242, "y": 0.112, "r": 0.11, "color": "255,240,200", "strength": 0.2 },
+      { "type": "glow", "x": 0.453, "y": 0.7, "r": 0.055, "color": "255,190,100", "strength": 0.5 },
+      { "type": "glow", "x": 0.239, "y": 0.595, "r": 0.03, "color": "255,190,100", "strength": 0.45 },
+      { "type": "steam", "x": 0.188, "y": 0.31 },
+      { "type": "steam", "x": 0.435, "y": 0.475 },
+      { "type": "steam", "x": 0.877, "y": 0.51 }
+    ]
+  },
+  "forest-morning": {
+    "file": "forest-morning.png",
+    "effects": [
+      { "type": "rays", "x": 0.09, "y": 0.05, "angle": 38, "strength": 0.14 },
+      { "type": "dust", "color": "255,245,190" },
+      { "type": "petals", "intensity": 0.35, "wind": 20 },
+      { "type": "steam", "x": 0.317, "y": 0.19 },
+      { "type": "glow", "x": 0.693, "y": 0.632, "r": 0.03, "color": "255,210,130", "strength": 0.3 }
+    ]
+  },
+  "night-study": {
+    "file": "night-study.png",
+    "effects": [
+      { "type": "glow", "x": 0.616, "y": 0.44, "r": 0.11, "color": "255,190,110", "strength": 0.4 },
+      { "type": "glow", "x": 0.314, "y": 0.617, "r": 0.05, "color": "255,170,80", "strength": 0.5 },
+      { "type": "steam", "x": 0.637, "y": 0.59 },
+      { "type": "dust", "intensity": 0.5, "color": "255,210,150" }
+    ]
+  },
+  "autumn-pond": {
+    "file": "autumn-pond.png",
+    "effects": [
+      { "type": "rain", "intensity": 0.5, "wind": 0.04, "color": "255,235,210" },
+      { "type": "leaves", "intensity": 0.8 },
+      { "type": "glow", "x": 0.14, "y": 0.494, "r": 0.1, "color": "255,170,80", "strength": 0.55 },
+      { "type": "steam", "x": 0.455, "y": 0.64 },
+      { "type": "fireflies", "count": 8, "area": [0.55, 0.45, 1, 0.95] }
+    ]
+  },
+  "zen-garden": {
+    "file": "zen-garden.png",
+    "effects": [
+      { "type": "petals", "intensity": 1.2, "wind": 25 },
+      { "type": "rays", "x": 0.7, "y": -0.05, "angle": 115, "strength": 0.1 },
+      { "type": "glow", "x": 0.258, "y": 0.595, "r": 0.04, "color": "255,200,120", "strength": 0.4 },
+      { "type": "glow", "x": 0.945, "y": 0.648, "r": 0.04, "color": "255,200,120", "strength": 0.4 },
+      { "type": "glow", "x": 0.329, "y": 0.367, "r": 0.035, "color": "255,210,140", "strength": 0.35 },
+      { "type": "steam", "x": 0.14, "y": 0.655 }
+    ]
+  }
+}
