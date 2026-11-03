@@ -160,8 +160,7 @@ export function renderTodos() {
   const now = new Date();
   const tabs = document.getElementById('todo-filters');
   tabs.replaceChildren(...FILTERS.map((id) => {
-    // the "All" badge counts only what is still to do
-    const n = applyFilter(id, now).filter((task) => id === 'done' || !task.done).length;
+    const n = applyFilter(id, now).length; // "All" counts everything it lists (open + done)
     return h(`button.tab${id === filter ? '.active' : ''}${id === 'overdue' && n ? '.alert' : ''}`, {
       type: 'button', role: 'tab', 'aria-selected': String(id === filter),
       onclick: () => { filter = id; renderTodos(); },
