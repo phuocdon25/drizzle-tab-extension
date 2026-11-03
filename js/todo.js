@@ -7,9 +7,10 @@ import { createDuePicker, fmtShort, closePopover } from './picker.js';
 
 const FILTERS = ['today', 'upcoming', 'overdue', 'all', 'done'];
 
-let filter = 'all';
+let filter = 'today'; // default tab
 let editingId = null;
 let composerPicker = null;
+let composerNote = null;
 
 const visible = () => state.todos.filter((task) => !task.hidden);
 
@@ -17,11 +18,14 @@ function applyFilter(id, now) {
   const today = dateKey(now);
   const v = visible();
   switch (id) {
-    case 'today': return v.filter((task) => !task.done && task.deadline === today);
+    // Today = due today + anything already overdue (so nothing late hides from the default tab)
+    case 'today': return v
+      .filter((task) => !task.done && (task.deadline === today || deadlineStatus(task, now) === 'overdue'))
+      .sort((a, b) => compareTodos(a, b, now));
     case 'upcoming': return v.filter((task) => !task.done && task.deadline && task.deadline > today);
     case 'overdue': return v.filter((task) => deadlineStatus(task, now) === 'overdue');
     case 'done': return v.filter((task) => task.done).sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
-    default: {
+    default: { // 'all' = open tasks first, then completed ones (shown under a divider)
       const open = v.filter((task) => !task.done).sort((a, b) => compareTodos(a, b, now));
       const done = v.filter((task) => task.done).sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
       return [...open, ...done];
@@ -57,9 +61,52 @@ function remove(id) {
   }
 }
 
+/** Text with URLs turned into links (built from text nodes, so user content is never parsed as HTML). */
+function linkify(text) {
+  const parts = [];
+  const re = /\bhttps?:\/\/[^\s<>"')]+/gi;
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    parts.push(h('a', { href: m[0], target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, m[0]));
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts;
+}
+
+/**
+ * Optional note: a small "Note" chip that expands into an auto-growing textarea.
+ * Ctrl/⌘ + Enter submits the surrounding form.
+ */
+function noteField(initial = '') {
+  const area = h('textarea.field.note-input', {
+    rows: '2', maxlength: '2000', placeholder: t('note.placeholder'), 'aria-label': t('note.label'),
+    oninput: () => grow(),
+    onkeydown: (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); area.form?.requestSubmit(); } },
+  });
+  area.value = initial;
+  const grow = () => { area.style.height = 'auto'; area.style.height = `${Math.min(area.scrollHeight, 160)}px`; };
+  const chip = h('button.chip.note-chip', { type: 'button', onclick: () => expand(true) }, icon('note'), t('note.add'));
+  const el = h('div.note-field', {}, chip, area);
+  const expand = (focus) => {
+    el.classList.add('open');
+    requestAnimationFrame(grow);
+    if (focus) area.focus();
+  };
+  if (initial) expand(false);
+  return {
+    el,
+    get value() { return area.value.trim(); },
+    reset() { area.value = ''; el.classList.remove('open'); },
+    refresh() { area.placeholder = t('note.placeholder'); area.setAttribute('aria-label', t('note.label')); chip.lastChild.textContent = t('note.add'); },
+  };
+}
+
 function editForm(task) {
   const title = h('input.field', { type: 'text', value: task.title, 'aria-label': t('todo.inputLabel'), maxlength: '200' });
   const picker = createDuePicker({ date: task.deadline, time: task.time, priority: task.priority });
+  const note = noteField(task.note || '');
   const cancel = () => { editingId = null; closePopover(); renderTodos(); };
   const save = (e) => {
     e.preventDefault();
@@ -67,11 +114,12 @@ function editForm(task) {
     if (!name) { title.focus(); return; }
     editingId = null;
     closePopover();
-    update(task.id, { title: name, ...picker.value });
+    update(task.id, { title: name, note: note.value, ...picker.value });
   };
   const form = h('form.todo-edit', { onsubmit: save, onkeydown: (e) => { if (e.key === 'Escape') { e.stopPropagation(); cancel(); } } },
     title,
     picker.el,
+    note.el,
     h('div.row-end', {},
       h('button.btn.ghost.small', { type: 'button', onclick: cancel }, t('common.cancel')),
       h('button.btn.primary.small', { type: 'submit' }, t('common.save'))));
@@ -97,7 +145,12 @@ function todoItem(task, now) {
       h('span.todo-meta', {},
         h('span.due', {}, label),
         task.deadline ? h('span.muted', {}, formatDeadline(task)) : null,
-        h(`span.prio.prio-${task.priority}`, {}, priorityLabel(task.priority)))),
+        h(`span.prio.prio-${task.priority}`, {}, priorityLabel(task.priority))),
+      task.note ? h('p.todo-note', {
+        title: t('note.expand'),
+        onclick: (e) => e.currentTarget.classList.toggle('expanded'),
+        ondblclick: (e) => e.stopPropagation(),
+      }, ...linkify(task.note)) : null),
     h('div.todo-actions', {},
       h('button.icon-btn.small', { type: 'button', 'aria-label': t('todo.editNamed', { title: task.title }), onclick: edit }, icon('pencil')),
       h('button.icon-btn.small', { type: 'button', 'aria-label': t('todo.deleteNamed', { title: task.title }), onclick: () => remove(task.id) }, icon('trash'))));
@@ -107,7 +160,8 @@ export function renderTodos() {
   const now = new Date();
   const tabs = document.getElementById('todo-filters');
   tabs.replaceChildren(...FILTERS.map((id) => {
-    const n = applyFilter(id, now).length;
+    // the "All" badge counts only what is still to do
+    const n = applyFilter(id, now).filter((task) => id === 'done' || !task.done).length;
     return h(`button.tab${id === filter ? '.active' : ''}${id === 'overdue' && n ? '.alert' : ''}`, {
       type: 'button', role: 'tab', 'aria-selected': String(id === filter),
       onclick: () => { filter = id; renderTodos(); },
@@ -116,8 +170,15 @@ export function renderTodos() {
 
   const items = applyFilter(filter, now);
   const ul = document.getElementById('todo-list');
+  const rows = [];
+  items.forEach((task, i) => {
+    if (filter === 'all' && task.done && !items[i - 1]?.done) {
+      rows.push(h('li.todo-divider', { role: 'separator' }, h('span', {}, `${t('filter.done')} (${items.length - i})`)));
+    }
+    rows.push(todoItem(task, now));
+  });
   ul.replaceChildren(...(items.length
-    ? items.map((task) => todoItem(task, now))
+    ? rows
     : [h('li.empty', {}, icon(filter === 'done' ? 'history' : 'check', 'icon empty-icon'), h('span', {}, t(`empty.${filter}`)))]));
 
   const open = visible().filter((task) => !task.done).length;
@@ -129,6 +190,7 @@ export function renderTodos() {
 /** Re-render everything that holds translated text (called after a language change). */
 export function refreshTodoLanguage() {
   composerPicker?.refresh();
+  composerNote?.refresh();
   renderTodos();
 }
 
@@ -142,12 +204,15 @@ export function initTodos() {
   const form = document.getElementById('todo-form');
   const input = document.getElementById('todo-input');
   const picker = createDuePicker();
+  const note = noteField();
   composerPicker = picker;
-  document.getElementById('todo-composer').prepend(picker.el);
+  composerNote = note;
+  const composer = document.getElementById('todo-composer');
+  composer.prepend(picker.el, note.el);
 
   // The picker opens while composing a task and folds away when nothing has been entered.
   const open = () => form.classList.add('composing');
-  const foldIfEmpty = () => { if (!input.value.trim() && picker.isDefault()) form.classList.remove('composing'); };
+  const foldIfEmpty = () => { if (!input.value.trim() && !note.value && picker.isDefault()) form.classList.remove('composing'); };
   input.addEventListener('focus', open);
   input.addEventListener('input', open);
   input.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !input.value) { form.classList.remove('composing'); input.blur(); } });
@@ -162,6 +227,7 @@ export function initTodos() {
     const todo = {
       id: uid(),
       title,
+      note: note.value,
       ...picker.value,
       done: false,
       hidden: false,
@@ -171,8 +237,10 @@ export function initTodos() {
     setTodos([...state.todos, todo]);
     input.value = '';
     picker.reset();
+    note.reset();
     closePopover();
-    if (filter === 'done') filter = 'all';
+    // Make sure the new task is visible: jump to "All" if the current tab would hide it.
+    if (!applyFilter(filter, new Date()).some((x) => x.id === todo.id)) filter = 'all';
     renderTodos();
     input.focus();
   });
