@@ -83,16 +83,8 @@ a { color: inherit; text-decoration: none; }
 .art-layer > * { position: absolute; inset: 0; }
 .art img, .art video { width: 100%; height: 100%; display: block; object-fit: cover; }
 #fx { pointer-events: none; }
-.art-dim, .grain { pointer-events: none; display: none; }
+.art-dim { pointer-events: none; display: none; }
 .has-art .art-dim { display: block; background: rgba(0, 0, 0, var(--art-dim, 0)); transition: background 300ms; }
-.has-art .grain {
-  display: block; inset: -60px; background-image: var(--grain); background-size: 160px;
-  opacity: 0.07; mix-blend-mode: overlay; animation: grain 0.9s steps(5) infinite;
-}
-@keyframes grain {
-  0% { transform: translate(0, 0); } 20% { transform: translate(-22px, 14px); } 40% { transform: translate(18px, -26px); }
-  60% { transform: translate(-12px, 30px); } 80% { transform: translate(26px, 8px); } 100% { transform: translate(0, 0); }
-}
 #backdrop::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.28) 100%);

@@ -2,7 +2,7 @@
 //   1. a user uploaded video/image (IndexedDB)
 //   2. the theme illustration from backgrounds/ (see backgrounds/index.json)
 //   3. the procedural canvas scene of the theme (fallback when no artwork exists)
-// 1 and 2 get an animated effects overlay (rain, petals, glow...) and film grain.
+// 1 and 2 get an animated effects overlay (rain, petals, glow...).
 import { SceneRunner } from './scenes.js';
 import { EffectsRunner } from './effects.js';
 import { THEMES } from './themes.js';
@@ -61,26 +61,10 @@ function effectsFor(settings, theme, artConfig) {
   return artConfig?.effects || theme.effects || [];
 }
 
-// ---------------- film grain ----------------
-function makeGrain() {
-  const c = document.createElement('canvas');
-  c.width = c.height = 160;
-  const ctx = c.getContext('2d');
-  const img = ctx.createImageData(160, 160);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const v = Math.random() * 255;
-    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
-    img.data[i + 3] = 255;
-  }
-  ctx.putImageData(img, 0, 0);
-  $('backdrop').style.setProperty('--grain', `url(${c.toDataURL()})`);
-}
-
 // ---------------- main ----------------
 export async function renderBackdrop(settings, themeId) {
   scene ??= new SceneRunner($('scene'));
   fx ??= new EffectsRunner($('fx'));
-  if (!$('backdrop').style.getPropertyValue('--grain')) makeGrain();
 
   const theme = THEMES[themeId];
   const animate = !settings.batterySaver && !reducedMotion.matches;

@@ -15,6 +15,11 @@ try {
  await rpc('initialize',{protocolVersion:'2024-11-05',capabilities:{},clientInfo:{name:'drizzle-test',version:'1.0'}});
  child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/initialized'})+'\n');
  console.log(JSON.stringify(await call('new_page',{url:`http://127.0.0.1:${server.address().port}/newtab.html`})));
+ console.log('GRAIN', JSON.stringify(await call('evaluate_script', {function: `() => {
+   if (document.querySelector('.grain')) throw Error('Grain overlay must be removed');
+   if (document.getElementById('backdrop').style.getPropertyValue('--grain')) throw Error('Grain texture must not be generated');
+   return {grainRemoved: true};
+ }` })));
  console.log(JSON.stringify(await call('evaluate_script',{function:`async () => {
  const {state,setTodos}=await import('./js/state.js');
  await setTodos(['A','B','C','D'].map((title,i)=>({id:title,title,createdAt:i,done:false,hidden:false,priority:'medium',deadline:null})));
