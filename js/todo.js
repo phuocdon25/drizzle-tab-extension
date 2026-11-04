@@ -7,7 +7,7 @@ import { createDuePicker, fmtShort, closePopover } from './picker.js';
 
 const FILTERS = ['today', 'upcoming', 'overdue', 'all', 'done'];
 
-let filter = 'today'; // default tab
+let filter = 'all'; // default tab
 let editingId = null;
 let draggedId = null;
 let reordering = false;
@@ -20,7 +20,7 @@ function applyFilter(id, now) {
   const today = dateKey(now);
   const v = visible();
   switch (id) {
-    // Today = due today + anything already overdue (so nothing late hides from the default tab)
+    // Today includes tasks due today and anything already overdue.
     case 'today': return v
       .filter((task) => !task.done && (task.deadline === today || deadlineStatus(task, now) === 'overdue'))
       .sort((a, b) => compareDisplayOrder(a, b, now));
