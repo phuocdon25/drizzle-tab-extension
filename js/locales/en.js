@@ -53,6 +53,9 @@ export default {
   'link.moveRight': 'Move {name} later',
   'link.managerHint': 'Up to {max} links. Drag and drop on the main screen or use the arrow buttons to reorder.',
 
+  'todo.reorderStart': 'Reorder',
+  'todo.reorderFinish': 'Finish sorting',
+  'todo.reorder': 'Drag to reorder; use ↑/↓ to move',
   'todo.title': 'To-do',
   'todo.inputLabel': 'Task name',
   'todo.placeholder': 'Add a new task… (press T)',

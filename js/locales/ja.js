@@ -53,6 +53,9 @@ export default {
   'link.moveRight': '{name} を後ろへ',
   'link.managerHint': '最大 {max} 件。メイン画面でドラッグ＆ドロップするか、矢印ボタンで並べ替えできます。',
 
+  'todo.reorderStart': '並べ替え',
+  'todo.reorderFinish': '完了',
+  'todo.reorder': 'ドラッグまたは↑/↓キーで並べ替え',
   'todo.title': 'やること',
   'todo.inputLabel': 'タスク名',
   'todo.placeholder': '新しいタスクを追加…（T キー）',

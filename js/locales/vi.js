@@ -56,6 +56,9 @@ export default {
   'link.moveRight': 'Đưa {name} ra sau',
   'link.managerHint': 'Tối đa {max} link. Kéo thả trên màn hình chính hoặc dùng nút mũi tên để đổi thứ tự.',
 
+  'todo.reorderStart': 'Sắp xếp',
+  'todo.reorderFinish': 'Xong',
+  'todo.reorder': 'Kéo để sắp xếp; dùng phím ↑/↓ để di chuyển',
   'todo.title': 'Việc cần làm',
   'todo.inputLabel': 'Tên task',
   'todo.placeholder': 'Thêm task mới… (phím T)',

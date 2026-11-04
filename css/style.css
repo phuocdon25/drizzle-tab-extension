@@ -412,7 +412,7 @@ kbd {
 
 .todo-list { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--text) 25%, transparent) transparent; list-style: none; margin: 0; padding: 0 2px 0 0; overflow-y: auto; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
 .todo-item {
-  display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: 10px;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px;
   padding: 12px 10px 12px 14px; border-radius: calc(var(--radius) * 0.7);
   background: var(--field); border-left: 4px solid transparent;
   animation: item-in 200ms var(--ease);
@@ -421,10 +421,13 @@ kbd {
 .todo-item.st-overdue { border-left-color: var(--overdue-bg); background: color-mix(in srgb, var(--overdue-bg) 16%, var(--field)); }
 .todo-item.st-today { border-left-color: var(--today-bg); background: color-mix(in srgb, var(--today-bg) 12%, var(--field)); }
 .todo-item.st-soon { border-left-color: var(--soon-bg); }
+.todo-list.reordering .todo-item { grid-template-columns: auto auto minmax(0, 1fr) auto; }
 .todo-item.editing { display: block; }
+.todo-head-actions { display: flex; align-items: center; gap: 10px; }
+#todo-reorder-toggle[aria-pressed='true'] { background: var(--accent); color: var(--on-accent); }
 
 .check {
-  display: grid; place-items: center; width: 24px; height: 24px; margin-top: 1px; padding: 0;
+  display: grid; place-items: center; width: 24px; height: 24px; margin-top: 0; padding: 0;
   border-radius: 999px; border: 2px solid var(--muted); background: transparent;
   transition: background var(--dur), border-color var(--dur), transform var(--dur) var(--ease);
 }
@@ -643,3 +646,20 @@ button.cell:hover { transform: scale(1.3); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
+
+.todo-drag {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 26px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: grab;
+  padding: 4px;
+  font-size: 20px;
+}
+.todo-drag:active { cursor: grabbing; }
+.todo-item.drop-before { box-shadow: 0 -3px 0 var(--accent); }
+.todo-item.drop-after { box-shadow: 0 3px 0 var(--accent); }

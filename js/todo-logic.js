@@ -104,3 +104,25 @@ export function reminderTime(todo, leadMinutes) {
   d.setHours(9, 0, 0, 0);
   return d;
 }
+
+export function compareDisplayOrder(a, b, now) {
+  if (Number.isFinite(a.order) || Number.isFinite(b.order)) {
+    return (a.order ?? Infinity) - (b.order ?? Infinity) || compareTodos(a, b, now);
+  }
+  return a.done && b.done ? (b.completedAt || 0) - (a.completedAt || 0) : compareTodos(a, b, now);
+}
+
+
+/** Reorder within the same completion group, retaining hidden and unrelated tasks. */
+export function reorderTodos(todos, sourceId, targetId, after = false, now = new Date()) {
+  const target = todos.find((task) => task.id === targetId && !task.hidden);
+  if (!target || sourceId === targetId) return todos;
+  const tasks = todos.filter((task) => !task.hidden && task.done === target.done)
+    .sort((a, b) => compareDisplayOrder(a, b, now));
+  const source = tasks.find((task) => task.id === sourceId);
+  if (!source) return todos;
+  const reordered = tasks.filter((task) => task.id !== sourceId);
+  reordered.splice(reordered.findIndex((task) => task.id === targetId) + (after ? 1 : 0), 0, source);
+  const ranks = new Map(reordered.map((task, index) => [task.id, index]));
+  return todos.map((task) => ranks.has(task.id) ? { ...task, order: ranks.get(task.id) } : task);
+}

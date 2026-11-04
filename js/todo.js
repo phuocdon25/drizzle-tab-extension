@@ -2,13 +2,15 @@
 import { state, setTodos, uid } from './state.js';
 import { h, icon, toast } from './ui.js';
 import { t } from './i18n.js';
-import { compareTodos, deadlineStatus, relativeLabel, dateKey, priorityLabel } from './todo-logic.js';
+import { compareDisplayOrder, reorderTodos, deadlineStatus, relativeLabel, dateKey, priorityLabel } from './todo-logic.js';
 import { createDuePicker, fmtShort, closePopover } from './picker.js';
 
 const FILTERS = ['today', 'upcoming', 'overdue', 'all', 'done'];
 
 let filter = 'today'; // default tab
 let editingId = null;
+let draggedId = null;
+let reordering = false;
 let composerPicker = null;
 let composerNote = null;
 
@@ -21,16 +23,22 @@ function applyFilter(id, now) {
     // Today = due today + anything already overdue (so nothing late hides from the default tab)
     case 'today': return v
       .filter((task) => !task.done && (task.deadline === today || deadlineStatus(task, now) === 'overdue'))
-      .sort((a, b) => compareTodos(a, b, now));
-    case 'upcoming': return v.filter((task) => !task.done && task.deadline && task.deadline > today);
-    case 'overdue': return v.filter((task) => deadlineStatus(task, now) === 'overdue');
-    case 'done': return v.filter((task) => task.done).sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
+      .sort((a, b) => compareDisplayOrder(a, b, now));
+    case 'upcoming': return v.filter((task) => !task.done && task.deadline && task.deadline > today).sort((a, b) => compareDisplayOrder(a, b, now));
+    case 'overdue': return v.filter((task) => deadlineStatus(task, now) === 'overdue').sort((a, b) => compareDisplayOrder(a, b, now));
+    case 'done': return v.filter((task) => task.done).sort((a, b) => compareDisplayOrder(a, b, now));
     default: { // 'all' = open tasks first, then completed ones (shown under a divider)
-      const open = v.filter((task) => !task.done).sort((a, b) => compareTodos(a, b, now));
-      const done = v.filter((task) => task.done).sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
+      const open = v.filter((task) => !task.done).sort((a, b) => compareDisplayOrder(a, b, now));
+      const done = v.filter((task) => task.done).sort((a, b) => compareDisplayOrder(a, b, now));
       return [...open, ...done];
     }
   }
+}
+
+function moveTask(sourceId, target, after) {
+  if (!reordering) return;
+  const reordered = reorderTodos(state.todos, sourceId, target.id, after);
+  if (reordered !== state.todos) setTodos(reordered);
 }
 
 function formatDeadline(task) {
@@ -134,7 +142,36 @@ function todoItem(task, now) {
     ? t('todo.doneOn', { date: t('fmt.doneOn', new Date(task.completedAt)) })
     : relativeLabel(task, now);
   const edit = () => { editingId = task.id; renderTodos(); };
-  return h(`li.todo-item.st-${status}.pr-${task.priority}`, { dataset: { id: task.id } },
+  return h(`li.todo-item.st-${status}.pr-${task.priority}`, { dataset: { id: task.id },
+    ondragover: (e) => {
+      const source = state.todos.find((item) => item.id === draggedId);
+      if (!source || source.done !== task.done || source.id === task.id) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const after = e.clientY > e.currentTarget.getBoundingClientRect().top + e.currentTarget.offsetHeight / 2;
+      e.currentTarget.classList.toggle('drop-before', !after);
+      e.currentTarget.classList.toggle('drop-after', after);
+    },
+    ondragleave: (e) => e.currentTarget.classList.remove('drop-before', 'drop-after'),
+    ondrop: (e) => {
+      e.preventDefault();
+      const after = e.currentTarget.classList.contains('drop-after');
+      e.currentTarget.classList.remove('drop-before', 'drop-after');
+      moveTask(draggedId, task, after);
+    },
+  },
+    reordering ? h('button.todo-drag', {
+      type: 'button', draggable: true, title: t('todo.reorder'), 'aria-label': t('todo.reorder'),
+      ondragstart: (e) => { draggedId = task.id; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', task.id); },
+      ondragend: () => { draggedId = null; document.querySelectorAll('.drop-before, .drop-after').forEach((el) => el.classList.remove('drop-before', 'drop-after')); },
+      onkeydown: (e) => {
+        if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+        e.preventDefault();
+        const items = applyFilter(filter, new Date()).filter((item) => item.done === task.done);
+        const target = items[items.findIndex((item) => item.id === task.id) + (e.key === 'ArrowUp' ? -1 : 1)];
+        if (target) { moveTask(task.id, target, e.key === 'ArrowDown'); document.querySelector(`[data-id="${task.id}"] .todo-drag`)?.focus(); }
+      },
+    }, '⠿') : null,
     h('button.check', {
       type: 'button', role: 'checkbox', 'aria-checked': String(!!task.done),
       'aria-label': t(task.done ? 'todo.markUndone' : 'todo.markDone', { title: task.title }),
@@ -169,6 +206,10 @@ export function renderTodos() {
 
   const items = applyFilter(filter, now);
   const ul = document.getElementById('todo-list');
+  ul.classList.toggle('reordering', reordering);
+  const reorderToggle = document.getElementById('todo-reorder-toggle');
+  reorderToggle.textContent = t(reordering ? 'todo.reorderFinish' : 'todo.reorderStart');
+  reorderToggle.setAttribute('aria-pressed', String(reordering));
   const rows = [];
   items.forEach((task, i) => {
     if (filter === 'all' && task.done && !items[i - 1]?.done) {
@@ -200,6 +241,11 @@ export function focusTodoInput() {
 }
 
 export function initTodos() {
+  document.getElementById('todo-reorder-toggle').addEventListener('click', () => {
+    reordering = !reordering;
+    draggedId = null;
+    renderTodos();
+  });
   const form = document.getElementById('todo-form');
   const input = document.getElementById('todo-input');
   const picker = createDuePicker();

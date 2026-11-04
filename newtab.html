@@ -87,7 +87,10 @@
     <aside id="todo-panel" class="todo panel" data-section="todo" aria-labelledby="todo-title">
       <div class="panel-head">
         <h2 id="todo-title"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg> <span data-i18n="todo.title"></span></h2>
-        <span id="todo-summary" class="muted small"></span>
+        <div class="todo-head-actions">
+          <span id="todo-summary" class="muted small"></span>
+          <button id="todo-reorder-toggle" class="btn ghost small" type="button" aria-pressed="false"></button>
+        </div>
       </div>
 
       <form id="todo-form" class="todo-form">
